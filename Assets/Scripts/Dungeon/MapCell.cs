@@ -6,9 +6,7 @@ public class MapCell : MonoBehaviour
 {
     public int mapX;
     public int mapY;
-    public bool pathfinderVisited;
     public bool playerExplored;
-
     public GameObject floor;
     public GameObject wallNorth;
     public GameObject wallEast;

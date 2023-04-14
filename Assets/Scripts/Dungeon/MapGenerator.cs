@@ -1,41 +1,47 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public MapCell currentCell;
-    public MapCell previousCell;
-    public MapCell startCell;
-    public MapCell endCell;
+    // The map cell array and map size classification.
+    public MapCell[,] mapCells;
+    public int mapSizeX;
+    public int mapSizeY;
+    public int mapLength;
+
+    // Available prefabs for generation, and the GameObject they are stored in.
+    public GameObject mapCellContainer;
+    public AvailableCellsScriptableObject availableCells;
+
+    // Fields for evaluation during generation.
+    private MapCell currentCell;
+    private MapCell previousCell;
+    private MapCell startCell;
+    private MapCell endCell;
     private DirectionOption departureDirection;
     private int cellDirectionOptionCount = System.Enum.GetNames(typeof(DirectionOption)).Length;
-    private int posX = 0;
-    private int posY = 0;
+
+    // Map coordinates used in generation.
+    private int positionX = 0;
+    private int positionY = 0;
     private int PosX
     {
-        get { return posX; }
-        set 
+        get { return positionX; }
+        set
         {
-            if (value >= 0 && value < mapSizeX) posX = value;
+            if (value >= 0 && value < mapSizeX) positionX = value;
         }
     }
     private int PosY
     {
-        get { return posY; }
+        get { return positionY; }
         set
         {
-            int previousY = posY;
-            if (value >= 0 && value < mapSizeY) posY = value;
+            if (value >= 0 && value < mapSizeY) positionY = value;
         }
     }
 
-    public MapCell[,] mapCells;
-    public GameObject mapCellContainer;
-    public AvailableCellsScriptableObject availableCells;
-    public int mapSizeX;
-    public int mapSizeY;
-    public int mapLength;
+    
 
     private void Awake()
     {
@@ -46,7 +52,18 @@ public class MapGenerator : MonoBehaviour
     private void GenerateDungeonPath()
     {
         GenerateStartCell();
-        GenerateRandomCells();
+        for (int i = 0; i < mapLength - 1; i++) // Deduct 1 as start cell is generated prior to loop.
+        {
+            previousCell = mapCells[PosX, PosY];
+            if (!FindNeighbourCell())
+            {
+                i--;
+                continue;
+            }
+            SpawnCell();
+            currentCell.name = $"Cell{i}";
+        }
+        GenerateEndCell();
     }
 
     private void GenerateStartCell()
@@ -54,99 +71,142 @@ public class MapGenerator : MonoBehaviour
         PosX = Random.Range(0, mapSizeX);
         PosY = Random.Range(0, mapSizeY);
 
-        mapCells[PosX, PosY] = Instantiate(availableCells.startCell);
-
-        startCell = mapCells[PosX, PosY];
-        startCell.transform.parent = mapCellContainer.transform;
-
-        currentCell = mapCells[PosX, PosY];
+        currentCell = mapCells[PosX, PosY] = Instantiate(availableCells.startCell);
         currentCell.mapX = PosX;
         currentCell.mapY = PosY;
-        previousCell = mapCells[PosX, PosY];
+        currentCell.transform.parent = mapCellContainer.transform;
+        currentCell.name = "StartCell";
+        startCell = mapCells[PosX, PosY];
     }
 
-    private bool NeighbourValidationCheck(MapCell targetCell)
+    private void GenerateEndCell()
     {
-        if (targetCell == previousCell) return false;
-        if (targetCell != null && targetCell.pathfinderVisited) return false;
-        return true;
+        var cellToDestroy = LocateFurthestCell(startCell);
+        int cellX = cellToDestroy.mapX;
+        int cellY = cellToDestroy.mapY;
+        Vector3 cellPosition = cellToDestroy.transform.position;
+        Destroy(cellToDestroy.gameObject);
+
+        endCell = mapCells[cellX, cellY] = Instantiate(availableCells.endCell);
+        endCell.transform.parent = mapCellContainer.transform;
+        endCell.transform.position = cellPosition;
+        endCell.name = "EndCell";
     }
 
-    private void FindNeighbourCell()
+    private bool FindNeighbourCell()
     {
         var randomDirection = (DirectionOption)Random.Range(0, cellDirectionOptionCount);
 
-        if (randomDirection == DirectionOption.North) PosY++;
-        else if (randomDirection == DirectionOption.South) PosY--;
-        else if (randomDirection == DirectionOption.East) PosX++;
-        else if (randomDirection == DirectionOption.West) PosX--;
-
-        var targetCell = mapCells[PosX, PosY];
-
-        if (!NeighbourValidationCheck(targetCell))
+        switch (randomDirection)
         {
-            PosX = previousCell.mapX;
-            PosY = previousCell.mapY;
-            FindNeighbourCell();
+            case DirectionOption.North:
+                {
+                    PosY++;
+                }
+                break;
+            case DirectionOption.South:
+                {
+                    PosY--;
+                }
+                break;
+            case DirectionOption.East:
+                {
+                    PosX++;
+                }
+                break;
+            case DirectionOption.West:
+                {
+                    PosX--;
+                }
+                break;
         }
+
+        var target = mapCells[PosX, PosY];
+
+        if (target != null) 
+        {
+            return false;
+        }
+
         departureDirection = randomDirection;
+        return true;
     }
 
     private void SpawnCell()
     {
-        int randomCellIndex = Random.Range(0, availableCells.availableRandomCells.Length);
-        mapCells[PosX, PosY] = Instantiate(availableCells.availableRandomCells[randomCellIndex]);
-        currentCell = mapCells[PosX, PosY];
-
-        Vector3 targetPosition = previousCell.transform.position;
-        if (departureDirection == DirectionOption.North)
-        {
-            targetPosition.z += 10;
-            currentCell.wallSouth.SetActive(false);
-            previousCell.wallNorth.SetActive(false);
-        }
-        else if (departureDirection == DirectionOption.South)
-        {
-            targetPosition.z -= 10;
-            currentCell.wallNorth.SetActive(false);
-            previousCell.wallSouth.SetActive(false);
-        }
-        else if (departureDirection == DirectionOption.East)
-        {
-            targetPosition.x += 10;
-            currentCell.wallWest.SetActive(false);
-            previousCell.wallEast.SetActive(false);
-        }
-        else if (departureDirection == DirectionOption.West)
-        {
-            targetPosition.x -= 10;
-            currentCell.wallEast.SetActive(false);
-            previousCell.wallWest.SetActive(false);
-        }
-
-        currentCell.transform.position = targetPosition;
+        int randomCellIndex = Random.Range(0, availableCells.randomCells.Length);
+        currentCell = mapCells[PosX, PosY] = Instantiate(availableCells.randomCells[randomCellIndex]);
+        currentCell.mapX = PosX;
+        currentCell.mapY = PosY;
         currentCell.transform.parent = mapCellContainer.transform;
-        currentCell.pathfinderVisited = true;
-    }
 
-    private void GenerateRandomCells()
-    {
-        for (int i = 0; i < mapLength; i++)
+        Vector3 destination = previousCell.transform.position;
+        switch (departureDirection)
         {
-            previousCell = mapCells[PosX, PosY];
-            FindNeighbourCell();
-            SpawnCell();
+            case DirectionOption.North:
+                {
+                    destination.z += 10;
+
+                    currentCell.transform.position = destination;
+
+                    currentCell.wallSouth.SetActive(false);
+                    previousCell.wallNorth.SetActive(false);
+                }
+                break;
+            case DirectionOption.South:
+                {
+                    destination.z -= 10;
+
+                    currentCell.transform.position = destination;
+
+                    currentCell.wallNorth.SetActive(false);
+                    previousCell.wallSouth.SetActive(false);
+                }
+                break;
+            case DirectionOption.East:
+                {
+                    destination.x += 10;
+
+                    currentCell.transform.position = destination;
+
+                    currentCell.wallWest.SetActive(false);
+                    previousCell.wallEast.SetActive(false);
+                }
+                break;
+            case DirectionOption.West:
+                {
+                    destination.x -= 10;
+
+                    currentCell.transform.position = destination;
+
+                    currentCell.wallEast.SetActive(false);
+                    previousCell.wallWest.SetActive(false);
+                }
+                break;
         }
     }
 
-    private void AssignEndCell()
+    private MapCell LocateFurthestCell(MapCell originCell)
     {
-        MapCell lastCell = mapCellContainer.transform.GetChild(mapCellContainer.transform.childCount - 1).GetComponent<MapCell>();
-        Destroy(lastCell);
-        lastCell = Instantiate(availableCells.endCell);
-        endCell = lastCell;
-        endCell.transform.parent = mapCellContainer.transform;
-        mapCells[PosX, PosY] = endCell;
+        Vector3 originPosition = originCell.transform.position;
+        MapCell furthestCell = originCell;
+        float furthestDistance = 0;
+        float targetDistanceFromOrigin;
+
+        foreach (var queryCell in mapCells)
+        {
+            if (queryCell == null) continue;
+
+            targetDistanceFromOrigin = Vector3.Distance(originPosition, queryCell.transform.position);
+
+            if (targetDistanceFromOrigin > furthestDistance)
+            {
+                furthestDistance = targetDistanceFromOrigin;
+                furthestCell = queryCell;
+            }
+        }
+
+        return furthestCell;
     }
 }
 

@@ -7,5 +7,5 @@ public class AvailableCellsScriptableObject : ScriptableObject
 {
     public MapCell startCell;
     public MapCell endCell;
-    public MapCell[] availableRandomCells;
+    public MapCell[] randomCells;
 }

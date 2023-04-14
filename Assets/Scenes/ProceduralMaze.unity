@@ -541,6 +541,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2031248829399154712, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e,
         type: 3}
+      propertyPath: smoothLookSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031248829399154712, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e,
+        type: 3}
+      propertyPath: smoothInputSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031248829399154712, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e,
+        type: 3}
       propertyPath: accelerationSpeed
       value: 1
       objectReference: {fileID: 0}

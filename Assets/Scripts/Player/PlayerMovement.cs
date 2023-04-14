@@ -6,15 +6,22 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 0.0f;
 
-    private Vector2 currentInputVector;
-    private Vector2 smoothInputVelocity;
+    // For movement input smoothing.
     [SerializeField]
     private float smoothInputSpeed;
+    private Vector2 currentInputVector;
+    private Vector2 smoothInputVelocity;
 
-    [SerializeField, Tooltip("Mask for look raycast to hit.")]
-    private LayerMask environmentMask;
-    
+    // For player look smoothing.
+    [SerializeField]
+    private float smoothLookSpeed;
+    private Vector3 currentLookVector;
+    private Vector3 smoothLookVelocity;
+
+    [SerializeField, Tooltip("Mask for player look raycast to hit.")]
+    private LayerMask lookRaycastMask;
     private Vector3 lookPos;
+    
     private PlayerInput playerInput;
     private PlayerInputActions playerInputActions;
     private Rigidbody playerRigidbody;
@@ -45,12 +52,13 @@ public class PlayerMovement : MonoBehaviour
         Vector2 mouseVector = playerInputActions.Player.Look.ReadValue<Vector2>();
         Ray ray = Camera.main.ScreenPointToRay(mouseVector);
 
-        if (Physics.Raycast(ray, out var hit, 100, environmentMask))
+        if (Physics.Raycast(ray, out var hit, 100, lookRaycastMask))
         {
             lookPos = hit.point;
             Vector3 lookDir = lookPos - transform.position;
-            lookDir.y = 0;
-            transform.forward = lookDir;
+            currentLookVector = Vector3.SmoothDamp(currentLookVector, lookDir, ref smoothLookVelocity, smoothLookSpeed);
+            currentLookVector.y = 0;
+            transform.forward = currentLookVector;
         }
     }
 

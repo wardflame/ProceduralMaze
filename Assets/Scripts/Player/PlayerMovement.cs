@@ -4,8 +4,11 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed = 0.0f;
+    private float moveSpeed = 5;
 
+    private Rigidbody playerRigidbody;
+
+    #region Input/look smoothing fields
     // For movement input smoothing.
     [SerializeField]
     private float smoothInputSpeed;
@@ -17,19 +20,26 @@ public class PlayerMovement : MonoBehaviour
     private float smoothLookSpeed;
     private Vector3 currentLookVector;
     private Vector3 smoothLookVelocity;
+    #endregion
 
+    #region Player cursor look fields
     [SerializeField, Tooltip("Mask for player look raycast to hit.")]
     private LayerMask lookRaycastMask;
     private Vector3 lookPos;
-    
+    #endregion
+
+    #region Input system
     private PlayerInput playerInput;
     private PlayerInputActions playerInputActions;
-    private Rigidbody playerRigidbody;
+    #endregion
 
-
+    #region Animation fields
+    public Animator animator;
+    #endregion
 
     private void Awake()
     {
+        animator = GetComponentInChildren<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
         playerInputActions = new PlayerInputActions();
@@ -47,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         Move();
     }
 
+    #region Movement
     private void LookAtMouse()
     {
         Vector2 mouseVector = playerInputActions.Player.Look.ReadValue<Vector2>();
@@ -70,4 +81,11 @@ public class PlayerMovement : MonoBehaviour
 
         playerRigidbody.MovePosition(transform.position + moveVector * moveSpeed * Time.fixedDeltaTime);
     }
+    #endregion
+
+    #region Animation
+
+
+
+    #endregion
 }

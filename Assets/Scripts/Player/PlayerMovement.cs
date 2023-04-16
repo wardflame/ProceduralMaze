@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Tooltip("Mask for player look raycast to hit.")]
     private LayerMask lookRaycastMask;
     private Vector3 lookPos;
+    private Vector3 lookDirection;
     #endregion
 
     #region Input system
@@ -50,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         LookAtMouse();
+        AnimatePlayer();
     }
 
     private void FixedUpdate()
@@ -66,8 +69,8 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out var hit, 100, lookRaycastMask))
         {
             lookPos = hit.point;
-            Vector3 lookDir = lookPos - transform.position;
-            currentLookVector = Vector3.SmoothDamp(currentLookVector, lookDir, ref smoothLookVelocity, smoothLookSpeed);
+            lookDirection = lookPos - transform.position;
+            currentLookVector = Vector3.SmoothDamp(currentLookVector, lookDirection, ref smoothLookVelocity, smoothLookSpeed);
             currentLookVector.y = 0;
             transform.forward = currentLookVector;
         }
@@ -84,8 +87,40 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region Animation
+    private void AnimatePlayer()
+    {
+        Vector2 modifiedVector = SetMovementAngle();
+
+        animator.SetFloat("VelocityX", modifiedVector.x);
+        animator.SetFloat("VelocityZ", modifiedVector.y);
+    }
+
+    private Vector2 SetMovementAngle()
+    {
+        Vector2 modVector = currentInputVector;
+
+        float currentRotation = transform.rotation.eulerAngles.y;
+
+        Vector3 pointX, pointZ;
+        pointX = transform.position;
+        pointX.x += 0.1f;
+
+        pointZ = transform.position;
+        pointZ.z += 0.1f;
+
+        Vector3 axis = Vector3.ClampMagnitude(lookDirection, 0.1f);
+
+        float iLerpMinusX = Mathf.InverseLerp(pointX.x, pointZ.x * -1, axis.x);
+        float iLerpX = Mathf.InverseLerp(pointX.x * -1, pointZ.x, axis.x);
+
+        float iLerpMinusZ = Mathf.InverseLerp(pointZ.z, pointX.z, axis.z);
+        float iLerpZ = Mathf.InverseLerp(pointZ.z * -1, pointX.z, axis.z);
 
 
 
+        if (currentRotation >= 90 && currentRotation <= 270) modVector *= -1;
+
+        return modVector; //new Vector2(0, 0);
+    }
     #endregion
 }

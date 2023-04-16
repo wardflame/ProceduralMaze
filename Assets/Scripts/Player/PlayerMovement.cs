@@ -3,10 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    #region Physics and speed fields
+    #region Controller fields
     [SerializeField]
     private float moveSpeed = 5;
-    private Rigidbody playerRigidbody;
+    private CharacterController charControl;
     #endregion
 
     #region Input/look smoothing fields
@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        playerRigidbody = GetComponent<Rigidbody>();
+        charControl = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         currentInputVector = Vector2.SmoothDamp(currentInputVector, inputVector, ref smoothInputVelocity, smoothInputSpeed);
         Vector3 moveVector = new Vector3(currentInputVector.x, 0, currentInputVector.y);
 
-        playerRigidbody.MovePosition(transform.position + moveVector * moveSpeed * Time.fixedDeltaTime);
+        charControl.Move(moveVector * moveSpeed * Time.fixedDeltaTime);
     }
     #endregion
 

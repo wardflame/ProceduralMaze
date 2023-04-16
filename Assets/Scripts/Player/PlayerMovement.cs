@@ -98,27 +98,30 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 SetMovementAngle()
     {
         Vector2 modVector = currentInputVector;
-
-        float currentRotation = transform.rotation.eulerAngles.y;
-
-        Vector3 pointX, pointZ;
-        pointX = transform.position;
-        pointX.x += 0.1f;
-
-        pointZ = transform.position;
-        pointZ.z += 0.1f;
+        float rot = transform.rotation.eulerAngles.y;
 
         Vector3 axis = Vector3.ClampMagnitude(lookDirection, 0.1f);
 
-        float iLerpMinusX = Mathf.InverseLerp(pointX.x, pointZ.x * -1, axis.x);
-        float iLerpX = Mathf.InverseLerp(pointX.x * -1, pointZ.x, axis.x);
+        float lerpX, lerpZ, axisX;
+        lerpX = 0;
+        lerpZ = 0;
+        axisX = axis.x * 10; // Get axis.x as valid lerp t value.
 
-        float iLerpMinusZ = Mathf.InverseLerp(pointZ.z, pointX.z, axis.z);
-        float iLerpZ = Mathf.InverseLerp(pointZ.z * -1, pointX.z, axis.z);
+        if (rot >= 180 && rot < 360) axisX *= -1;
 
+        lerpX = Mathf.Lerp(modVector.x, modVector.y, axisX);
+        lerpZ = Mathf.Lerp(modVector.y, modVector.x, axisX);
 
+        if (rot >= 0 && rot < 180) lerpX *= -1;
+        if (rot >= 90 && rot < 180) lerpZ *= -1;
+        if (rot >= 180 && rot <= 270) lerpZ *= -1;
 
-        if (currentRotation >= 90 && currentRotation <= 270) modVector *= -1;
+        Debug.Log(axis.x * 10);
+        Debug.Log("X: " + lerpX);
+        Debug.Log("Z: " + lerpZ);
+
+        modVector.x = lerpX;
+        modVector.y = lerpZ;
 
         return modVector; //new Vector2(0, 0);
     }

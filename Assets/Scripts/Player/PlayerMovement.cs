@@ -106,28 +106,93 @@ public class PlayerMovement : MonoBehaviour
         Vector2 modVector = currentInputVector;
         float rot = transform.rotation.eulerAngles.y;
 
+        float vY = modVector.y < 0 ? modVector.y * -1 : modVector.y;
+        float vX = modVector.x < 0 ? modVector.x * -1 : modVector.x;
+        bool moreY = vY > vX;
+
         Vector3 axis = Vector3.ClampMagnitude(lookDirection, 0.1f);
 
-        float lerpX, lerpZ, axisX;
-        lerpX = 0;
-        lerpZ = 0;
-        axisX = axis.x * 10; // Get axis.x as valid lerp t value.
+        float axisZ, frontArc, frontArcInverse, rearArc, rearArcInverse;
+        axisZ = axis.z * 10; // Get axis.x as valid lerp t value.
 
-        if (rot >= 180 && rot < 360) axisX *= -1;
+        frontArc = Mathf.Lerp(modVector.x, modVector.y, axisZ);
+        frontArcInverse = Mathf.Lerp(modVector.y, modVector.x, axisZ);
 
-        lerpX = Mathf.Lerp(modVector.x, modVector.y, axisX);
-        lerpZ = Mathf.Lerp(modVector.y, modVector.x, axisX);
+        rearArc = Mathf.Lerp(modVector.x, modVector.y, axisZ * -1);
+        rearArcInverse = Mathf.Lerp(modVector.y, modVector.x, axisZ * -1);
+        
+        // 180 degree arc on the positive Z axis.
+        if (rot is >= 270 or <= 90)
+        {
+            // Mouse in positive right quadrant.
+            if (rot <= 90)
+            {
+                if (moreY)
+                {
+                    modVector.y = frontArc;
+                    modVector.x = frontArcInverse * -1;
+                }
+                else
+                {
+                    modVector.y = frontArc;
+                    modVector.x = frontArcInverse;
+                }
+            }
+            // Mouse in positive left quadrant.
+            else
+            {
+                if (moreY)
+                {
+                    modVector.y = frontArc;
+                    modVector.x = frontArcInverse;
+                }
+                else
+                {
+                    modVector.y = frontArc * -1;
+                    modVector.x = frontArcInverse;
+                }
+            }
+        }
 
-        if (rot >= 0 && rot < 180) lerpX *= -1;
-        if (rot >= 90 && rot < 180) lerpZ *= -1;
-        if (rot >= 180 && rot <= 270) lerpZ *= -1;
+        // 180 degree arc on the negative Z axis.
+        else
+        {
+            // Mouse in negative right quadrant.
+            if (rot <= 180)
+            {
+                if (moreY)
+                {
+                    modVector.y = rearArc * -1;
+                    modVector.x = rearArcInverse * -1;
+                }
+                else
+                {
+                    modVector.y = rearArc;
+                    modVector.x = rearArcInverse * -1;
+                }
+            }
+            // Mouse in negative left quadrant.
+            else
+            {
+                if (moreY)
+                {
+                    modVector.y = rearArc * -1;
+                    modVector.x = rearArcInverse;
+                }
+                else
+                {
+                    modVector.y = rearArc * -1;
+                    modVector.x = rearArcInverse * -1;
+                }
+            }
+        }
 
-        Debug.Log(axis.x * 10);
-        Debug.Log("X: " + lerpX);
-        Debug.Log("Z: " + lerpZ);
+        
 
-        modVector.x = lerpX;
-        modVector.y = lerpZ;
+        Debug.Log("Front Arc: " + frontArc);
+        Debug.Log("Front Arc Inverse: " + frontArcInverse);
+        //Debug.Log("Rear Arc: " + rearArc);
+        //Debug.Log("Rear Arc Inverse: " + rearArcInverse);
 
         return modVector; //new Vector2(0, 0);
     }

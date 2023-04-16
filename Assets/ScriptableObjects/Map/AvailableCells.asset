@@ -16,4 +16,4 @@ MonoBehaviour:
     type: 3}
   endCell: {fileID: 1050945086835937679, guid: 0d7e623346d60fe4381a37d6732be3bc, type: 3}
   randomCells:
-  - {fileID: 1050945086835937679, guid: 0d7e623346d60fe4381a37d6732be3bc, type: 3}
+  - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}

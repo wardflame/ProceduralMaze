@@ -1,13 +1,13 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Physics and speed fields
     [SerializeField]
     private float moveSpeed = 5;
-
     private Rigidbody playerRigidbody;
+    #endregion
 
     #region Input/look smoothing fields
     // For movement input smoothing.
@@ -95,6 +95,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("VelocityZ", modifiedVector.y);
     }
 
+    /// <summary>
+    /// Adjust the animator controller's velocity on the
+    /// X and Z axis to simulate the player adjusting running
+    /// direction to the position of the cursor on the environment.
+    /// </summary>
+    /// <returns></returns>
     private Vector2 SetMovementAngle()
     {
         Vector2 modVector = currentInputVector;

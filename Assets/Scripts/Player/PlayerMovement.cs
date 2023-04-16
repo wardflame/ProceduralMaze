@@ -103,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns></returns>
     private Vector2 SetMovementAngle()
     {
+        #region Lots of math
         Vector2 modVector = currentInputVector;
         float rot = transform.rotation.eulerAngles.y;
 
@@ -186,15 +187,9 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+        #endregion
 
-        
-
-        Debug.Log("Front Arc: " + frontArc);
-        Debug.Log("Front Arc Inverse: " + frontArcInverse);
-        //Debug.Log("Rear Arc: " + rearArc);
-        //Debug.Log("Rear Arc Inverse: " + rearArcInverse);
-
-        return modVector; //new Vector2(0, 0);
+        return modVector;
     }
     #endregion
 }

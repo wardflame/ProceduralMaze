@@ -9,7 +9,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 3928bd4c03d801e448dbd4f580de2f3a, type: 2}
+    m_Motion: {fileID: 7400000, guid: f6631f18648c3884bbed5775e0f22d6e, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -17,31 +17,31 @@ BlendTree:
     m_DirectBlendParameter: VelocityX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 65c31a70abfff56449e4f33c10fe13e0, type: 2}
+    m_Motion: {fileID: 7400000, guid: 74ff779a7d3371844bc496e6bfd266e0, type: 2}
     m_Threshold: 0.16666667
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 1.35
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: VelocityX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: d5c84c4b7ddc1c243b12dac385445a68, type: 2}
+    m_Motion: {fileID: 7400000, guid: 3c9f99d88a06350468c3009c650479cd, type: 2}
     m_Threshold: 0.33333334
     m_Position: {x: -1, y: 0}
-    m_TimeScale: 0.9
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: VelocityX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 90fe3d3857962584789ee8615775ea69, type: 2}
+    m_Motion: {fileID: 7400000, guid: 30ab1b11350c75347ba388a43b13f3da, type: 2}
     m_Threshold: 0.5
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 0.9
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: VelocityX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 2255948e6eff69849884bb65b4fb14f1, type: 2}
+    m_Motion: {fileID: 7400000, guid: 69bb9df7ab0b03e4fb3b73dd67bb8f1b, type: 2}
     m_Threshold: 0.6666667
     m_Position: {x: 0, y: -1}
     m_TimeScale: 1
@@ -457,7 +457,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 6a15f35db0b0c7d42a6ede4a0475f6ef, type: 2}
+  m_Motion: {fileID: 7400000, guid: 69b430b989b5f264da38ba4cef76e700, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

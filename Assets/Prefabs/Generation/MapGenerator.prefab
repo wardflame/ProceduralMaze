@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7307606379929773379}
   - component: {fileID: 7307606379929773381}
-  - component: {fileID: 7307606379929773378}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -46,27 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6fd25c22ffb421418e137a3774afdb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCell: {fileID: 0}
-  previousCell: {fileID: 0}
-  startCell: {fileID: 0}
-  endCell: {fileID: 0}
-  mapCellContainer: {fileID: 7307606381370524620}
-  availableCells: {fileID: 11400000, guid: 8025ec0cf84a5bf4484435a12f8b1faa, type: 2}
   mapSizeX: 10
   mapSizeY: 10
   mapLength: 100
---- !u!114 &7307606379929773378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307606379929773376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e63cf39011d0b004b9e28a3fbdf9cfa3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  mapCellContainer: {fileID: 7307606381370524620}
+  availableCells: {fileID: 11400000, guid: 8025ec0cf84a5bf4484435a12f8b1faa, type: 2}
 --- !u!1 &7307606381370524620
 GameObject:
   m_ObjectHideFlags: 0

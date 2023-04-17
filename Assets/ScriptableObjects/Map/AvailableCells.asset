@@ -12,9 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ced1c44c0172f44b59dd5c6f5035cc, type: 3}
   m_Name: AvailableCells
   m_EditorClassIdentifier: 
-  startCell: {fileID: 1050945086835937679, guid: 0d7e623346d60fe4381a37d6732be3bc,
+  startCell: {fileID: 6905341168547850664, guid: c0d5d79f3218b0e4cb196244ad2eb8e2,
     type: 3}
-  endCell: {fileID: 1050945086835937679, guid: 0d7e623346d60fe4381a37d6732be3bc, type: 3}
+  endCell: {fileID: 3781625549062760076, guid: be2ca396a2a25d041964e5fbb462b9ad, type: 3}
   randomCells:
   - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}
   - {fileID: 3044888401610651596, guid: a0063e2830c33f042b6c6f915e45b927, type: 3}
+  - {fileID: 5414023973237570352, guid: 4fdca196362d6694ab363dd3a971214c, type: 3}
+  - {fileID: 8859391110539214364, guid: 2d479bb86e1e87e4490b4c0b613d389d, type: 3}
+  - {fileID: 2038186357595893621, guid: 7e2f5fe88cd450e448cca0e886c58e56, type: 3}
+  - {fileID: 8513764369789570434, guid: b0bc6dae20b42e54a851eefad079c685, type: 3}
+  - {fileID: 3929181048388136273, guid: d0b0cc55879d18348b5a156091d8eb0f, type: 3}
+  - {fileID: 5752236134616491588, guid: 265674434bd943b43948ee5fff3c7595, type: 3}
+  - {fileID: 3795083859630330447, guid: 484449321913b744bb2d25e458f836db, type: 3}
+  - {fileID: 6043957167682320056, guid: 9e19296695ce456418a21553235ed25f, type: 3}
+  - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}
+  - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}
+  - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}
+  - {fileID: 8490978611794060989, guid: 26d1e53ff185f7b47a33b3d20a4fccd9, type: 3}

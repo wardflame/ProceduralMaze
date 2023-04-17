@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         currentInputVector = Vector2.SmoothDamp(currentInputVector, inputVector, ref smoothInputVelocity, smoothInputSpeed);
         Vector3 moveVector = new Vector3(currentInputVector.x, 0, currentInputVector.y);
 
-        charControl.Move(moveVector * moveSpeed * Time.fixedDeltaTime);
+        charControl.SimpleMove(moveVector * moveSpeed);
     }
     #endregion
 

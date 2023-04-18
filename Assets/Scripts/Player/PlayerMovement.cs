@@ -1,8 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region The Cache
+    private Camera mainCamera;
+    #endregion
+
     #region Controller fields
     [SerializeField]
     private float moveSpeed = 5;
@@ -41,12 +46,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        mainCamera = Camera.main;
         animator = GetComponentInChildren<Animator>();
         charControl = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
-
     }
 
     private void Update()
@@ -63,8 +68,8 @@ public class PlayerMovement : MonoBehaviour
     #region Movement
     private void LookAtMouse()
     {
-        Vector2 mouseVector = playerInputActions.Player.Look.ReadValue<Vector2>();
-        Ray ray = Camera.main.ScreenPointToRay(mouseVector);
+        Vector3 mouseVector = playerInputActions.Player.Look.ReadValue<Vector2>();
+        Ray ray = mainCamera.ScreenPointToRay(mouseVector);
 
         if (Physics.Raycast(ray, out var hit, 100, lookRaycastMask))
         {
@@ -72,8 +77,9 @@ public class PlayerMovement : MonoBehaviour
             lookDirection = lookPos - transform.position;
             currentLookVector = Vector3.SmoothDamp(currentLookVector, lookDirection, ref smoothLookVelocity, smoothLookSpeed);
             currentLookVector.y = 0;
+            currentLookVector.Normalize();
             transform.forward = currentLookVector;
-        }
+        }        
     }
 
     private void Move()
@@ -89,10 +95,10 @@ public class PlayerMovement : MonoBehaviour
     #region Animation
     private void AnimatePlayer()
     {
-        Vector2 modifiedVector = SetMovementAngle();
+        Vector3 modifiedVector = SetMovementAngle();
 
         animator.SetFloat("VelocityX", modifiedVector.x);
-        animator.SetFloat("VelocityZ", modifiedVector.y);
+        animator.SetFloat("VelocityZ", modifiedVector.z);
     }
 
     /// <summary>
@@ -101,95 +107,14 @@ public class PlayerMovement : MonoBehaviour
     /// direction to the position of the cursor on the environment.
     /// </summary>
     /// <returns></returns>
-    private Vector2 SetMovementAngle()
+    private Vector3 SetMovementAngle()
     {
-        #region Lots of math
-        Vector2 modVector = currentInputVector;
-        float rot = transform.rotation.eulerAngles.y;
+        Vector3 inputVector = new Vector3(currentInputVector.x, 0, currentInputVector.y);
+        float rotation = transform.rotation.eulerAngles.y;
 
-        float vY = modVector.y < 0 ? modVector.y * -1 : modVector.y;
-        float vX = modVector.x < 0 ? modVector.x * -1 : modVector.x;
-        bool moreY = vY > vX;
+        var vector = Quaternion.Euler(0, -rotation, 0) * inputVector;
 
-        Vector3 axis = Vector3.ClampMagnitude(lookDirection, 0.1f);
-
-        float axisZ, frontArc, frontArcInverse, rearArc, rearArcInverse;
-        axisZ = axis.z * 10; // Get axis.x as valid lerp t value.
-
-        frontArc = Mathf.Lerp(modVector.x, modVector.y, axisZ);
-        frontArcInverse = Mathf.Lerp(modVector.y, modVector.x, axisZ);
-
-        rearArc = Mathf.Lerp(modVector.x, modVector.y, axisZ * -1);
-        rearArcInverse = Mathf.Lerp(modVector.y, modVector.x, axisZ * -1);
-        
-        // 180 degree arc on the positive Z axis.
-        if (rot is >= 270 or <= 90)
-        {
-            // Mouse in positive right quadrant.
-            if (rot <= 90)
-            {
-                if (moreY)
-                {
-                    modVector.y = frontArc;
-                    modVector.x = frontArcInverse * -1;
-                }
-                else
-                {
-                    modVector.y = frontArc;
-                    modVector.x = frontArcInverse;
-                }
-            }
-            // Mouse in positive left quadrant.
-            else
-            {
-                if (moreY)
-                {
-                    modVector.y = frontArc;
-                    modVector.x = frontArcInverse;
-                }
-                else
-                {
-                    modVector.y = frontArc * -1;
-                    modVector.x = frontArcInverse;
-                }
-            }
-        }
-
-        // 180 degree arc on the negative Z axis.
-        else
-        {
-            // Mouse in negative right quadrant.
-            if (rot <= 180)
-            {
-                if (moreY)
-                {
-                    modVector.y = rearArc * -1;
-                    modVector.x = rearArcInverse * -1;
-                }
-                else
-                {
-                    modVector.y = rearArc;
-                    modVector.x = rearArcInverse * -1;
-                }
-            }
-            // Mouse in negative left quadrant.
-            else
-            {
-                if (moreY)
-                {
-                    modVector.y = rearArc * -1;
-                    modVector.x = rearArcInverse;
-                }
-                else
-                {
-                    modVector.y = rearArc * -1;
-                    modVector.x = rearArcInverse * -1;
-                }
-            }
-        }
-        #endregion
-
-        return modVector;
+        return vector;
     }
     #endregion
 }

@@ -506,9 +506,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593041724}
-  m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
+  m_LocalRotation: {x: 0.46174863, y: -0, z: -0, w: 0.8870109}
   m_LocalPosition: {x: 0, y: 8, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -839,6 +839,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031248829399154712, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e,
+        type: 3}
+      propertyPath: screenRayGameObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2031248829399154712, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e,
+        type: 3}
+      propertyPath: mousePointGameObject
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c34a3c0ecdc1c6e478f1bad2b1a6673e, type: 3}

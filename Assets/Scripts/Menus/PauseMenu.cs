@@ -18,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.UI.Enable();
-        LevelManager.instance.player.GetComponent<PlayerStatus>().winCallback += VictoryScreen;
+        GameManager.instance.player.GetComponent<PlayerStatus>().winCallback += VictoryScreen;
     }
 
     private void OnToggleMenu()
